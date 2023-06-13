@@ -38,6 +38,13 @@
       background-color: white;
       text-transform: uppercase;
       font-weight: 500;
+
+      &:hover{
+        background-color: #2879fe;
+        color: white;
+        transition: all 1s ease;
+        border-radius: 4px;
+      }
     }
 
     img{
