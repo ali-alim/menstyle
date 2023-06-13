@@ -13,11 +13,11 @@ const Navbar = () => {
         <div className='wrapper'>
             <div className='left'>
               <div className='item'>
-                <img  src="/images/geo.png" width="40px" height="35px" alt="georgian flag" />
+                <img src="/images/geo.png" width="40px" height="35px" alt="georgian flag" />
                 <KeyboardArrowDownIcon />
               </div>
               <div className='item'>
-                <span>USD</span>
+                <span>GEL</span>
                 <KeyboardArrowDownIcon />
               </div>
               <div className='item'>
