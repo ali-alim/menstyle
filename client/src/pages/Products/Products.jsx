@@ -25,7 +25,24 @@ const Products = () => {
       <div className="left">
         <div className="filterItem">
           <h2>Product Categories</h2>
-          
+          <div className="inputItem" key={1}>
+              <input
+                type="checkbox"
+                id={1}
+                value={1}
+                onChange={handleChange}
+              />
+              <label htmlFor={1}>shoes</label>
+          </div>
+          <div className="inputItem" key={2}>
+              <input
+                type="checkbox"
+                id={2}
+                value={2}
+                onChange={handleChange}
+              />
+              <label htmlFor={2}>t-shirts</label>
+          </div>
         </div>
         <div className="filterItem">
           <h2>Filter by price</h2>
