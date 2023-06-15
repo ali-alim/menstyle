@@ -6,23 +6,26 @@ import "./featuredProducts.scss";
 const FeaturedProducts = ({ type }) => {
 
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const res = await axios.get(process.env.REACT_APP_API_URL + '/products?populate=*', {
+        const res = await axios.get(process.env.REACT_APP_API_URL + `/products?populate=*&[filters][type][$eq]=${type}`, {
           headers: {
             Authorization: "bearer " + process.env.REACT_APP_API_TOKEN
           }
         })
-        
         setProducts(res.data.data)
       } catch (err) {
-        console.log(err);
+        setError(true);
       }
+      setLoading(false);
     }
     fetchData();
-  }, [])
+  }, [type])
 
   return (
     <div className="featuredProducts">
@@ -33,9 +36,12 @@ const FeaturedProducts = ({ type }) => {
         </p>
       </div>
       <div className="bottom">
-        {products?.map((item,i) => (
-          <Card item={item} key={i} />
-        ))}
+        {error 
+          ? "Something went wrong!"
+          : loading
+          ? "loading..."
+          : products?.map((item,i) => <Card item={item} key={i} />) 
+        }
       </div>
     </div>
   );

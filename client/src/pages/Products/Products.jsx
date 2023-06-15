@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import List from "../../components/List/List";
 import "./products.scss";
 
@@ -8,6 +9,7 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState(1000);
   const [sort, setSort] = useState(null);
   const [selectedSubCats, setSelectedSubCats] = useState([]);
+  const [data, setData] = useState([]);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -20,29 +22,39 @@ const Products = () => {
     );
   };
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(process.env.REACT_APP_API_URL + `/sub-categories?[filters][categories][id][$eq]=${catId}`, {
+          headers: {
+            Authorization: "bearer " + process.env.REACT_APP_API_TOKEN
+          }
+        })
+        setData(res.data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchData();
+  }, [catId])
+
   return (
     <div className="products">
       <div className="left">
         <div className="filterItem">
           <h2>Product Categories</h2>
-          <div className="inputItem" key={1}>
+          {data?.map((item) => (
+            <div className="inputItem" key={item.id}>
               <input
                 type="checkbox"
-                id={1}
-                value={1}
+                id={item.id}
+                value={item.id}
                 onChange={handleChange}
               />
-              <label htmlFor={1}>shoes</label>
-          </div>
-          <div className="inputItem" key={2}>
-              <input
-                type="checkbox"
-                id={2}
-                value={2}
-                onChange={handleChange}
-              />
-              <label htmlFor={2}>t-shirts</label>
-          </div>
+              <label htmlFor={item.id}>{item.attributes.title}</label>
+            </div>
+          ))}
         </div>
         <div className="filterItem">
           <h2>Filter by price</h2>
