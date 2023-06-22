@@ -5,9 +5,12 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BalanceIcon from "@mui/icons-material/Balance";
 import "./product.scss";
+import { addToCart } from "../../redux/cartReducer";
+import { useDispatch } from "react-redux";
 
 const Product = () => {
   const {id} = useParams();
+  const dispatch = useDispatch();
   const [selectedImg, setSelectedImg] = useState("img");
   const [quantity, setQuantity] = useState(1);
   const [data, setData] = useState({});
@@ -22,7 +25,6 @@ const Product = () => {
             Authorization: "bearer " + process.env.REACT_APP_API_TOKEN
           }
         })
-        console.log("res",res)
         setData(res.data.data);
         setLoading(false);
       } catch (err) {
@@ -31,10 +33,6 @@ const Product = () => {
     }
     fetchData();
   }, [id])
-
-  console.log("data",data)
-  console.log("id",id)
-
 
   return (
     <div className="product">
@@ -77,7 +75,16 @@ const Product = () => {
               {quantity}
               <button onClick={() => setQuantity((prev) => prev + 1)}>+</button>
             </div>
-            <button className="add">
+            <button className="add" onClick={() => dispatch(
+              addToCart({
+                id: data.id,
+                title: data.attributes.title,
+                desc: data.attributes.desc,
+                price: data.attributes.price,
+                img: data.attributes.img.data.attributes.url,
+                quantity
+              })
+            )}>
               <AddShoppingCartIcon /> ADD TO CART
             </button>
             <div className="links">
