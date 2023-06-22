@@ -1,28 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {useParams} from "react-router-dom";
+import axios from "axios";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BalanceIcon from "@mui/icons-material/Balance";
 import "./product.scss";
 
-const loading = false;
-
-const images = [
-  "https://images.unsplash.com/photo-1581655353564-df123a1eb820?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-  "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-]
-
-const data = {
-  id: 1,
-  title: "Some title",
-  price: 700,
-  desc: "Some Desc",
-  img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-  quantity: 2,
-}
-
 const Product = () => {
-  const [selectedImg, setSelectedImg] = useState(0);
+  const {id} = useParams();
+  const [selectedImg, setSelectedImg] = useState("img");
   const [quantity, setQuantity] = useState(1);
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(process.env.REACT_APP_API_URL + `/products/${id}?populate=*`, {
+          headers: {
+            Authorization: "bearer " + process.env.REACT_APP_API_TOKEN
+          }
+        })
+        console.log("res",res)
+        setData(res.data.data);
+        setLoading(false);
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchData();
+  }, [id])
+
+  console.log("data",data)
+  console.log("id",id)
 
 
   return (
@@ -34,27 +45,27 @@ const Product = () => {
           <div className="left">
             <div className="images">
               <img
-                src={images[0]}
+                src={process.env.REACT_APP_UPLOAD_URL + data?.attributes?.img?.data?.attributes?.url}
                 alt=""
-                onClick={(e) => setSelectedImg(0)}
+                onClick={(e) => setSelectedImg("img")}
               />
               <img
-                src={images[1]}
+                src={process.env.REACT_APP_UPLOAD_URL + data?.attributes?.img2?.data?.attributes?.url}
                 alt=""
-                onClick={(e) => setSelectedImg(1)}
+                onClick={(e) => setSelectedImg("img2")}
               />
             </div>
             <div className="mainImg">
               <img
-                src={images[selectedImg]}
+                src={process.env.REACT_APP_UPLOAD_URL + data?.attributes?.[selectedImg]?.data?.attributes?.url }
                 alt=""
               />
             </div>
           </div>
           <div className="right">
-            <h1>{data?.title}</h1>
-            <span className="price">$700</span>
-            <p>{data?.desc}</p>
+            <h1>{data?.attributes?.title}</h1>
+            <span className="price">${data?.attributes?.price}</span>
+            <p>{data?.attributes?.desc}</p>
             <div className="quantity">
               <button
                 onClick={() =>
