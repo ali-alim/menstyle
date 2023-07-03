@@ -33,6 +33,7 @@ const Product = () => {
     }
     fetchData();
   }, [id])
+  
 
   return (
     <div className="product">
@@ -55,7 +56,7 @@ const Product = () => {
             </div>
             <div className="mainImg">
               <img
-                src={data?.attributes?.[selectedImg]?.data?.attributes?.url }
+                src={data?.attributes?.[selectedImg]?.data?.attributes?.url}
                 alt=""
               />
             </div>

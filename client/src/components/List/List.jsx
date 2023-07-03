@@ -5,11 +5,6 @@ import "./list.scss";
 
 
 const List = ({ subCats, maxPrice, sort, catId }) => {
-  console.log("subCats",subCats)
-  console.log("maxPrice",maxPrice)
-  console.log("sort",sort)
-  console.log("catId",catId)
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);

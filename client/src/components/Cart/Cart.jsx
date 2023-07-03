@@ -9,7 +9,6 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const products = useSelector(state => state.cart.products);
-  console.log("products",products)
   const totalPrice = () => {
     let total = 0;
     products.forEach(item => (total += item.quantity * item.price));
